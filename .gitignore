@@ -106,3 +106,5 @@ share/
 /kivy-examples
 
 include
+bin
+pip-selfcheck.json
