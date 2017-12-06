@@ -1,0 +1,38 @@
+#:kivy 1.8.0
+
+MainWidget:
+
+
+    size_hint: 1, 1
+    orientation: 'horizontal'
+    padding: 20
+    spacing: 20
+
+
+    BoxLayout:
+
+
+
+
+
+
+        Button:
+            id: addv
+            text: 'Add Villager'
+            size_hint: [0.25, 0.1]
+            on_press: app.add_villager(inpname.text)
+
+        Button:
+            id: removev
+            text: 'Remove Villager'
+            size_hint: [0.25, 0.1]
+            on_press: app.rm_villager(inpname.text)
+
+
+        TextInput:
+            id: inpname
+            multiline: False
+            hint_text: 'Name..'
+            text: ''
+            font_size: 25
+            size_hint: [0.25, 0.1]

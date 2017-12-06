@@ -1,0 +1,47 @@
+#:kivy 1.8.0
+
+VillagesWidget:
+
+    canvas.before:
+        Color:
+            rgba: 0.00,0.01,0.4,0.1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+
+        size_hint: 1, 1
+        orientation: 'vertical'
+        padding: 10
+        spacing: 10
+
+        AnchorLayout:
+            anchor_y: 'bottom'
+            anchor_x: 'center'
+
+            TextInput:
+                id: project_inp
+                size: 450, 75
+                size_hint: None, None
+                multiline: False
+                hint_text: 'Choose your village..'
+                text: ''
+                font_size: 40
+                padding_y: 10
+                padding_x: 5
+                on_text_validate: app.main(project_inp.text)
+
+
+        AnchorLayout:
+            anchor_y: 'top'
+            anchor_x: 'center'
+
+            Button:
+                id: project_but
+                size: 250, 65
+                size_hint: None, None
+                background_color: 1,0.28,0,1
+                font_size: 30
+                text: 'Open'
+                on_press: app.main(project_inp.text)
