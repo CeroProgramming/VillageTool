@@ -78,6 +78,55 @@ class ProfessionDropDown(DropDown):
         VTA.change_profession(VTA.villager, VTA.data['professions'][i])
 
 
+class CareerDropDown(DropDown):
+    '''DropDown of all careers.'''
+
+    def __init__(self):
+        super(CareerDropDown, self).__init__()
+        self.buttons = []
+
+        for i in range(len(VTA.data['careers'])):
+            self.buttons.append(Button(id=VTA.data['careers'][i].capitalize(), text=VTA.data['careers'][i].capitalize(), size_hint_y=None, height=40, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1)))
+            self.add_widget(self.buttons[i])
+            self.buttons[i].bind(on_release=partial(self.transmitter, i))
+
+    def transmitter(self, i, instance):
+        '''Shows the number of the button pressed.'''
+        VTA.change_career(VTA.villager, VTA.data['careers'][i])
+
+class DemandAmountDropDown(DropDown):
+    '''DropDown a list to choose the amount of items for trading (demands).'''
+
+    def __init__(self):
+        super(DemandAmountDropDown, self).__init__()
+        self.buttons = []
+
+        for i in range(64):
+            self.buttons.append(Button(id=VTA.data['careers'][i].capitalize(), text=VTA.data['careers'][i].capitalize(), size_hint_y=None, height=40, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1)))
+            self.add_widget(self.buttons[i])
+            self.buttons[i].bind(on_release=partial(self.transmitter, i))
+
+    def transmitter(self, i, instance):
+        '''Shows the number of the button pressed.'''
+        VTA.set_demand(VTA.villager, i)
+
+class SupplyAmountDropDown(DropDown):
+    '''DropDown a list to choose the amount of items for trading (supplys).'''
+
+    def __init__(self):
+        super(SupplyAmountDropDown, self).__init__()
+        self.buttons = []
+
+        for i in range(64):
+            self.buttons.append(Button(id=VTA.data['careers'][i].capitalize(), text=VTA.data['careers'][i].capitalize(), size_hint_y=None, height=40, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1)))
+            self.add_widget(self.buttons[i])
+            self.buttons[i].bind(on_release=partial(self.transmitter, i))
+
+    def transmitter(self, i, instance):
+        '''Shows the number of the button pressed.'''
+        VTA.set_demand(VTA.villager, i)
+
+
 
 
 class VillageToolApp(App):
@@ -165,21 +214,29 @@ class VillageToolApp(App):
         screen = Builder.load_file(self.file)
 
 
-        layout = GridLayout(cols=1, padding=5, spacing=5, size_hint=(1, None), pos=(150, 10), size=(self.root.width - 300, self.root.height - 20))
-        input_name = TextInput(text=name, size=(250, 1000), multiline=False, height=43, font_size=40, border=(4, 4, 4, 4), foreground_color=(1, 1, 1, 1))
+        layout = GridLayout(cols=1, padding=5, spacing=5, size_hint=(1, 1), pos=(150, 10), size=(self.root.width - 300, self.root.height - 20))
+        input_name = TextInput(text=name, multiline=False, size_hint_y=None, height=80, font_size=40, font_color=(1, 0.98, 0, 1), border=(4, 4, 4, 4), foreground_color=(1, 1, 1, 1), background_color=(0, 0.5, 1, 1))
         input_name.bind(on_text_validate=lambda x: self.rename_villager(name, input_name.text))
         layout.add_widget(input_name)
 
-
-        '''profession_dropdown = DropDown()
-        for profession in self.data['professions']:
-            button = Button(text=profession.capitalize(), size_hint_y=None, height=40, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1))
-            button.bind(on_release=lambda x: self.change_profession(name, profession))
-            profession_dropdown.add_widget(button)'''
-        profession_dropdown = ProfessionDropDown()
+        self.profession_dropdown = ProfessionDropDown()
         profession_button = Button(text=self.village[self.project]['villagers'][name]['profession'].capitalize(), size_hint_y=None, height=50, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1))
-        profession_button.bind(on_release=profession_dropdown.open)
+        profession_button.bind(on_release=self.profession_dropdown.open)
         layout.add_widget(profession_button)
+
+        self.career_dropdown = CareerDropDown()
+        career_button = Button(text=self.village[self.project]['villagers'][name]['career'].capitalize(), size_hint_y=None, height=50, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1))
+        career_button.bind(on_release=self.career_dropdown.open)
+        layout.add_widget(career_button)
+
+        trading_box = BoxLayout(size_hint=(1, 1), orientation='vertical', padding=[10, 10, 10, 10], spacing=[10, 10, 10, 10])
+
+        supply_amount = SupplyAmountDropDown()
+        supply_amount_text = TextInput(text=self.village[self.project]['villagers'][name]['supplys'], multiline=False, size_hint_y=None, height=80, font_size=40, font_color=(1, 0.98, 0, 1), border=(4, 4, 4, 4), foreground_color=(1, 1, 1, 1), background_color=(0, 0.5, 1, 1))
+        #TODO Changing architecture to supprt multiple tradings
+        layout.add_widget(trading_box)
+
+        layout.add_widget(Button(text='Back', size_hint_y=None, height=50, font_size=25, background_normal='src/white16x.png', background_color=(1, 0.28, 0, 1), on_release=lambda x: self.main(self.project)))
 
         screen.add_widget(layout)
         self.root.add_widget(screen)
@@ -200,8 +257,20 @@ class VillageToolApp(App):
 
     def change_profession(self, name, profession):
         '''Changes the profession of a villager.'''
-        print('Name:', name)
-        print('Profession:', profession)
+        self.village[self.project]['villagers'][name]['profession'] = profession
+        JsonHandler.exporter(self.project, self.village)
+        self.profession_dropdown.dismiss()
+        self.load_villager(name)
+
+    def change_career(self, name, career):
+        '''Changes the career of a villager.'''
+        self.village[self.project]['villagers'][name]['career'] = career
+        JsonHandler.exporter(self.project, self.village)
+        self.career_dropdown.dismiss()
+        self.load_villager(name)
+
+
+
 
 
 
