@@ -26,10 +26,15 @@ VillagesWidget:
                 size_hint: None, None
                 multiline: False
                 hint_text: 'Choose your village..'
+                hint_text_color: 1,1,1,1
                 text: ''
                 font_size: 40
+                font_color: 1,0.98,0,1
                 padding_y: 10
                 padding_x: 5
+                border: 4, 4, 4, 4
+                background_color: 0,0.5,1,1
+                foreground_color: 1,1,1,1
                 on_text_validate: app.main(project_inp.text)
 
 
@@ -41,6 +46,7 @@ VillagesWidget:
                 id: project_but
                 size: 250, 65
                 size_hint: None, None
+                background_normal: 'src/white16x.png'
                 background_color: 1,0.28,0,1
                 font_size: 30
                 text: 'Open'
