@@ -2,7 +2,6 @@
 
 MainWidget:
 
-
     size_hint: 1, 1
     orientation: 'horizontal'
     padding: 20
@@ -11,28 +10,39 @@ MainWidget:
 
     BoxLayout:
 
-
-
-
-
+        size_hint: 1, 1
+        orientation: 'horizontal'
+        padding: 20
+        spacing: 20
 
         Button:
             id: addv
             text: 'Add Villager'
             size_hint: [0.25, 0.1]
-            on_press: app.add_villager(inpname.text)
+            font_size: 25
+            background_normal: 'src/white16x.png'
+            background_color: 0,0.5,1,1
+            on_release: app.add_villager(inpname.text)
+
 
         Button:
             id: removev
             text: 'Remove Villager'
             size_hint: [0.25, 0.1]
-            on_press: app.rm_villager(inpname.text)
-
+            font_size: 25
+            background_normal: 'src/white16x.png'
+            background_color: 0,0.5,1,1
+            on_release: app.rm_villager(inpname.text)
 
         TextInput:
             id: inpname
             multiline: False
             hint_text: 'Name..'
+            hint_text_color: 1,1,1,1
             text: ''
-            font_size: 25
+            font_size: 30
             size_hint: [0.25, 0.1]
+            border: 4, 4, 4, 4
+            background_color: 0,0.5,1,1
+            foreground_color: 1,1,1,1
+            on_text_validate: app.add_villager(inpname.text)
