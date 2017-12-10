@@ -108,3 +108,4 @@ share/
 include
 bin
 pip-selfcheck.json
+data/vale.json
